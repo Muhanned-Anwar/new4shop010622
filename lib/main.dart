@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new4shop010622/app/about_screen.dart';
@@ -47,11 +48,13 @@ import 'launch_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  await CustomerPreferenceController().initSharedPreferences();
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  await UserPreferenceController().initSharedPreferences();
-  await CustomerPreferenceController().initSharedPreferences();
+  // await UserPreferenceController().initSharedPreferences();
+  // await CustomerPreferenceController().initSharedPreferences();
 
   runApp(const MyApp());
 }

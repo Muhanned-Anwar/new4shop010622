@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "808513407815",
+    "project_id": "new4shop-34da7",
+    "storage_bucket": "new4shop-34da7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808513407815:android:55b75e00d85c867c2e5a62",
+        "android_client_info": {
+          "package_name": "com.example.new4shop010622"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808513407815-oeeojb5stghoorvmmhcba973m1ji4ea5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnjoLO4C3Ds-TyJRI01_VY0-ReysN5gI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808513407815-oeeojb5stghoorvmmhcba973m1ji4ea5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

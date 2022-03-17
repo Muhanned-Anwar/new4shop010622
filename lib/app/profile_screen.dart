@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:new4shop010622/network/api/controllers/customer_api_controller.dart';
+import 'package:new4shop010622/utils/helpers.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -7,7 +9,7 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with Helpers{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Image.asset('images/app/edit-button.png'),
           ),
           IconButton(
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, '/authentication_screen', (route) => false);
-              // Navigator.pushReplacementNamed(context, '/sign_in');
-            },
+            onPressed: () async => await logout(),
             icon: Image.asset('images/app/logout.png'),
           ),
         ],
@@ -204,5 +203,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> logout()async{
+    bool status = await CustomerApiController().logout();
+    if(status){
+      Navigator.pushNamedAndRemoveUntil(context, '/authentication_screen', (route) => false);
+      showSnackBar(context: context, message: 'logout Success Fully',time: 2);
+    }else{
+      showSnackBar(context: context, message: 'logout failed, try again',error: true);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new4shop010622/network/api/controllers/customer_api_controller.dart';
 import 'package:new4shop010622/utils/helpers.dart';
 
 class SignIn extends StatefulWidget {
@@ -11,22 +12,22 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> with Helpers {
   bool _isObscurePassword = true;
 
-  late TextEditingController _emailTextController;
+  late TextEditingController _mobileTextController;
   late TextEditingController _passwordTextController;
 
-  String? _emailError;
+  String? _mobileError;
   String? _passwordError;
 
   @override
   void initState() {
     super.initState();
-    _emailTextController = TextEditingController();
+    _mobileTextController = TextEditingController();
     _passwordTextController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _emailTextController.dispose();
+    _mobileTextController.dispose();
     _passwordTextController.dispose();
     super.dispose();
   }
@@ -78,10 +79,10 @@ class _SignInState extends State<SignIn> with Helpers {
                 ),
                 const SizedBox(height: 15),
                 TextField(
-                  controller: _emailTextController,
+                  controller: _mobileTextController,
                   cursorColor: Colors.deepOrangeAccent,
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Mobile',
                     labelStyle: const TextStyle(
                       fontSize: 20,
                       color: Colors.grey,
@@ -89,7 +90,7 @@ class _SignInState extends State<SignIn> with Helpers {
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.deepOrangeAccent),
                     ),
-                    errorText: _emailError,
+                    errorText: _mobileError,
                     errorBorder: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
@@ -97,15 +98,7 @@ class _SignInState extends State<SignIn> with Helpers {
                         width: 2,
                       ),
                     ),
-                    // errorBorder: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.circular(10),
-                    //   borderSide: BorderSide(
-                    //     color: Colors.red.shade300,
-                    //     width: 1,
-                    //   ),
-                    // ),
                   ),
-
                 ),
                 const SizedBox(height: 15),
                 TextField(
@@ -142,19 +135,11 @@ class _SignInState extends State<SignIn> with Helpers {
                         width: 2,
                       ),
                     ),
-                    // errorBorder: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.circular(10),
-                    //   borderSide: BorderSide(
-                    //     color: Colors.red.shade300,
-                    //     width: 1,
-                    //   ),
-                    // ),
                   ),
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -222,7 +207,7 @@ class _SignInState extends State<SignIn> with Helpers {
                     child: Text(
                       'OR',
                       style:
-                          TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                      TextStyle(color: Colors.grey.shade400, fontSize: 16),
                     )),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -287,33 +272,38 @@ class _SignInState extends State<SignIn> with Helpers {
   bool checkData() {
     if (checkFieldError()) {
       return true;
-    }else{
-      showSnackBar(context: context, message: 'Enter required data!',error: true,time: 1);
+    } else {
+      showSnackBar(
+          context: context,
+          message: 'Enter required data!',
+          error: true,
+          time: 1);
       return false;
     }
   }
 
-  bool checkFieldError(){
-    bool email = checkEmail();
+  bool checkFieldError() {
+    bool email = checkMobile();
     bool password = checkPassword();
     setState(() {
-      _emailError =  !email ? 'Enter email !':null;
-      _passwordError = !password ? 'Enter password !':null;
+      _mobileError = !email ? 'Enter email !' : null;
+      _passwordError = !password ? 'Enter password !' : null;
     });
-    if(email && password ){
+    if (email && password) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
-  bool checkEmail() {
-    if (_emailTextController.text.isNotEmpty) {
-      if (_emailTextController.text.contains('@')) {
+
+  bool checkMobile() {
+    if (_mobileTextController.text.isNotEmpty) {
+      if (_mobileTextController.text.length >= 7) {
         return true;
       } else {
         showSnackBar(
             context: context,
-            message: 'Enter correct email!',
+            message: 'Enter correct mobile by Length >= 7!',
             error: true,
             time: 1);
         return false;
@@ -325,7 +315,7 @@ class _SignInState extends State<SignIn> with Helpers {
 
   bool checkPassword() {
     if (_passwordTextController.text.isNotEmpty) {
-      if (_passwordTextController.text.length >= 8) {
+      if (_passwordTextController.text.length >= 4) {
         return true;
       } else {
         showSnackBar(
@@ -341,6 +331,22 @@ class _SignInState extends State<SignIn> with Helpers {
   }
 
   Future<void> login() async {
-    Navigator.pushNamed(context, '/main_screen');
+    String mobile = _mobileTextController.text.startsWith('0')
+        ? _mobileTextController.text.substring(
+        1, _mobileTextController.text.length)
+        : _mobileTextController.text;
+
+    bool status = await CustomerApiController().login(
+      mobile: mobile,
+      password: _passwordTextController.text,
+    );
+    if (status) {
+      print('Success');
+      Navigator.pushNamed(context, '/main_screen');
+      showSnackBar(context: context, message: 'Login Success Fully' , time: 2);
+    } else {
+      print('Failed');
+      showSnackBar(context: context, message: 'Login Failed, try again' , time: 2,error: true);
+    }
   }
 }

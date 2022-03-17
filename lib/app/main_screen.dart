@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:new4shop010622/getX/drawer_getX.dart';
 import 'package:new4shop010622/models/category.dart';
 import 'package:new4shop010622/models/item.dart';
 import 'package:slide_drawer/slide_drawer.dart';
@@ -103,6 +101,7 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
+
       ),
       drawerEnableOpenDragGesture: false,
       backgroundColor: Colors.grey.shade200,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new4shop010622/prefs/customer_preference_controller.dart';
 import 'package:new4shop010622/prefs/user_prefernce_controller.dart';
 
 import '../Widgets/page_view_indicator.dart';
@@ -19,7 +20,7 @@ class _OutBoardingScreenState extends State<OutBoardingScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    UserPreferenceController().saveFirstOpenApp();
+    CustomerPreferenceController().saveFirstOpenApp();
   }
 
   @override

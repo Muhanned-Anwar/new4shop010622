@@ -21,7 +21,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
       () {
         String routeName = CustomerPreferenceController().loggedIn
             ? '/main_screen'
-            : UserPreferenceController().firstTime
+            : CustomerPreferenceController().firstTime
                 ? '/authentication_screen'
                 : '/out_boarding_screen';
         Navigator.pushReplacementNamed(context, routeName);
