@@ -7,7 +7,7 @@ import 'package:new4shop010622/app/change_password_screen.dart';
 import 'package:new4shop010622/app/check_out.dart';
 import 'package:new4shop010622/app/edit_order_screen.dart';
 import 'package:new4shop010622/app/edit_profile_screen.dart';
-import 'package:new4shop010622/app/forgot_password_screen.dart';
+import 'package:new4shop010622/auth/forgot_password_screen.dart';
 import 'package:new4shop010622/app/fruits_and_vegetables.dart';
 import 'package:new4shop010622/app/invite_screen.dart';
 import 'package:new4shop010622/app/item_details.dart';
@@ -44,6 +44,7 @@ import 'app_business/order_review_screen_business.dart';
 import 'app_business/orders_screen_business.dart';
 import 'app_business/payment_screen_business.dart';
 import 'app_business/view_invoice_screen_business.dart';
+import 'auth/reset_password_screen.dart';
 import 'launch_screen.dart';
 
 void main() async {
@@ -73,6 +74,8 @@ class MyApp extends StatelessWidget {
         '/authentication_screen':(context) => const AuthenticationScreen(),
         '/sign_up':(context) => const SignUp(),
         '/sign_in':(context) => const SignIn(),
+        '/forget_password_screen':(context) => const ForgotPasswordScreen(),
+        '/reset_password_screen':(context) => const ResetPasswordScreen(),
         '/main_screen':(context) => const MainScreen(),
         '/confirm_phone_number':(context) => const ConfirmPhoneNumber(),
         '/fruits_and_vegetables':(context) => const FruitsAndVegetables(),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:new4shop010622/Widgets/code_text_field.dart';
 import 'package:new4shop010622/utils/helpers.dart';
 
+import '../getX/customer_information_getX_controller.dart';
+import '../network/api/controllers/customer_api_controller.dart';
+
 class ConfirmPhoneNumber extends StatefulWidget {
   const ConfirmPhoneNumber({Key? key}) : super(key: key);
 
@@ -24,8 +27,8 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
   late FocusNode _thirdFocusNode;
   late FocusNode _fourthFocusNode;
 
-  final String _phoneNumber = '+1919 345 8756';
-
+   String _phoneNumber = '+1919 345 8756';
+   String _activeNumber = '';
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,10 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
     _secondFocusNode = FocusNode();
     _thirdFocusNode = FocusNode();
     _fourthFocusNode = FocusNode();
+
+    _phoneNumber = CustomerInformationGetXController.to.getPhoneNumber();
+    _activeNumber = CustomerInformationGetXController.to.getActiveCode();
+
   }
 
   @override
@@ -178,7 +185,7 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
                     decoration: const BoxDecoration(
                         color: Colors.deepOrangeAccent, shape: BoxShape.circle),
                     child: IconButton(
-                      onPressed: () async => await perform(),
+                      onPressed: () async => await performActivate(),
                       icon: const Icon(
                         Icons.arrow_forward_outlined,
                         size: 30,
@@ -195,7 +202,7 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
     );
   }
 
-  Future<void> perform() async {
+  Future<void> performActivate() async {
     if(checkData()){
       await confirmPhone();
     }
@@ -227,6 +234,15 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
   }
 
   Future<void> confirmPhone() async{
-    Navigator.pushReplacementNamed(context, '/sign_in');
+    String mobile = _phoneNumber.startsWith('0')
+        ? _phoneNumber
+        .substring(1, _phoneNumber.length)
+        : _phoneNumber;
+
+    String code = _firstCodeTextController.text + _secondCodeTextController.text + _thirdCodeTextController.text + _fourthCodeTextController.text;
+    bool status = await CustomerApiController().activate(mobile: mobile, code: code, context: context);
+    if(status){
+      Navigator.pushReplacementNamed(context, '/sign_in');
+    }
   }
 }

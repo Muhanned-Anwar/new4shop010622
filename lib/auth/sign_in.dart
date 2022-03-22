@@ -18,6 +18,9 @@ class _SignInState extends State<SignIn> with Helpers {
   String? _mobileError;
   String? _passwordError;
 
+  late Future<bool> _futureStatus;
+  bool _status = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,12 +35,14 @@ class _SignInState extends State<SignIn> with Helpers {
     super.dispose();
   }
 
+  double? _progressValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Container(
-          margin: const EdgeInsets.only(top: 20, left: 20),
+          margin: const EdgeInsets.only(left: 20),
           child: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -54,6 +59,12 @@ class _SignInState extends State<SignIn> with Helpers {
       ),
       body: ListView(
         children: [
+          LinearProgressIndicator(
+            value: _progressValue,
+            color: Colors.deepOrangeAccent,
+            backgroundColor: Colors.transparent,
+            minHeight: 5,
+          ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 51),
             child: Column(
@@ -163,7 +174,10 @@ class _SignInState extends State<SignIn> with Helpers {
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, '/forget_password_screen');
+                        },
                         child: const Text(
                           'Forgot your password?',
                           style: TextStyle(color: Colors.deepOrangeAccent),
@@ -207,7 +221,7 @@ class _SignInState extends State<SignIn> with Helpers {
                     child: Text(
                       'OR',
                       style:
-                      TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                          TextStyle(color: Colors.grey.shade400, fontSize: 16),
                     )),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -263,6 +277,12 @@ class _SignInState extends State<SignIn> with Helpers {
     );
   }
 
+  void _changeProgressValue({required double? value}) {
+    setState(() {
+      _progressValue = value;
+    });
+  }
+
   Future<void> performLogin() async {
     if (checkData()) {
       await login();
@@ -283,13 +303,13 @@ class _SignInState extends State<SignIn> with Helpers {
   }
 
   bool checkFieldError() {
-    bool email = checkMobile();
+    bool mobile = checkMobile();
     bool password = checkPassword();
     setState(() {
-      _mobileError = !email ? 'Enter email !' : null;
+      _mobileError = !mobile ? 'Enter mobile number !' : null;
       _passwordError = !password ? 'Enter password !' : null;
     });
-    if (email && password) {
+    if (mobile && password) {
       return true;
     } else {
       return false;
@@ -331,22 +351,29 @@ class _SignInState extends State<SignIn> with Helpers {
   }
 
   Future<void> login() async {
+    _changeProgressValue(value: null);
+
     String mobile = _mobileTextController.text.startsWith('0')
-        ? _mobileTextController.text.substring(
-        1, _mobileTextController.text.length)
+        ? _mobileTextController.text
+            .substring(1, _mobileTextController.text.length)
         : _mobileTextController.text;
 
     bool status = await CustomerApiController().login(
       mobile: mobile,
       password: _passwordTextController.text,
     );
+    _changeProgressValue(value: status ? 1 : 0);
     if (status) {
       print('Success');
       Navigator.pushNamed(context, '/main_screen');
-      showSnackBar(context: context, message: 'Login Success Fully' , time: 2);
+      showSnackBar(context: context, message: 'Login SuccessFully', time: 2);
     } else {
       print('Failed');
-      showSnackBar(context: context, message: 'Login Failed, try again' , time: 2,error: true);
+      showSnackBar(
+          context: context,
+          message: 'Login Failed, try again',
+          time: 2,
+          error: true);
     }
   }
 }

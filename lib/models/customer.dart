@@ -1,7 +1,7 @@
 
 import 'package:new4shop010622/models/store.dart';
 
-import 'city.dart';
+import 'city/city.dart';
 
 class Customer {
   late int id;

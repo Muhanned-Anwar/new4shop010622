@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../getX/customer_information_getX_controller.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);
@@ -8,6 +11,13 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+
+  CustomerInformationGetXController controller =
+  Get.put(
+    CustomerInformationGetXController(),
+  );
+
+
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size);

@@ -1,26 +1,30 @@
 
 class ApiSettings{
 
-  static const _BASE_URL = 'https://smart-store.mr-dev.tech/';
+  static const _baseURL = 'https://smart-store.mr-dev.tech/';
 
-  static const _API_URL = _BASE_URL + 'api/';
+  static const _apiURL = _baseURL + 'api/';
 
-  static const _AUTH_URL = _API_URL + 'auth/';
-  static const LOGIN = _AUTH_URL + 'login';
-  static const LOGOUT = _AUTH_URL + 'logout';
+  static const _authURL = _apiURL + 'auth/';
+  static const login = _authURL + 'login';
+  static const logout = _authURL + 'logout';
+  static const register = _authURL + 'register';
+  static const activate = _authURL + 'activate';
+  static const forgetPassword = _authURL + 'forget-password';
+  static const resetPassword = _authURL + 'reset-password';
 
 
-  static const _CITIES_URL = _API_URL + 'cities';
-  static const _HOME_URL = _API_URL + 'home';
-  static const _CATEGORIES_URL = _API_URL + 'categories';
-  static const _PRODUCTS_URL = _API_URL + 'products';
-  static const _OFFERS_URL = _API_URL + 'offers';
-  static const _FAVORITE_PRODUCTS_URL = _API_URL + 'favorite-products';
-  static const _ADDRESSES_URL = _API_URL + 'addresses';
-  static const _PAYMENT_CARDS_URL = _API_URL + 'payment-cards';
-  static const _ORDERS_URL = _API_URL + 'orders';
-  static const _FAQS_URL = _API_URL + 'faqs';
-  static const _CONTACT_REQUESTS_URL = _API_URL + 'contact-requests';
-  static const _NOTIFICATIONS_URL = _API_URL + 'notifications';
+  static const CITIES_URL = _apiURL + 'cities';
+  static const HOME_URL = _apiURL + 'home';
+  static const CATEGORIES_URL = _apiURL + 'categories';
+  static const PRODUCTS_URL = _apiURL + 'products';
+  static const OFFERS_URL = _apiURL + 'offers';
+  static const FAVORITE_PRODUCTS_URL = _apiURL + 'favorite-products';
+  static const ADDRESSES_URL = _apiURL + 'addresses';
+  static const PAYMENT_CARDS_URL = _apiURL + 'payment-cards';
+  static const ORDERS_URL = _apiURL + 'orders';
+  static const FAQS_URL = _apiURL + 'faqs';
+  static const CONTACT_REQUESTS_URL = _apiURL + 'contact-requests';
+  static const NOTIFICATIONS_URL = _apiURL + 'notifications';
 
 }
