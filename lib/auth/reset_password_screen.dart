@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:new4shop010622/Widgets/code_text_field.dart';
 import 'package:new4shop010622/utils/helpers.dart';
@@ -17,7 +18,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
   late TextEditingController _passwordTextController;
   late TextEditingController _passwordConfirmationTextController;
 
-  String? _code;
   late TextEditingController _firstCodeTextController;
   late TextEditingController _secondCodeTextController;
   late TextEditingController _thirdCodeTextController;
@@ -32,7 +32,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
   String? _confirmPasswordError;
 
   String _phoneNumber = '+1919 345 8756';
-  String _activeNumber = '';
   bool _isObscurePassword = true;
   bool _isObscureConfirmPassword = true;
 
@@ -53,7 +52,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     _fourthFocusNode = FocusNode();
 
     _phoneNumber = CustomerInformationGetXController.to.getPhoneNumber();
-    _activeNumber = CustomerInformationGetXController.to.getActiveCode();
   }
 
   @override
@@ -72,6 +70,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     _fourthFocusNode.dispose();
     super.dispose();
   }
+
+  double? _progressValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +98,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
         child: ListView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
+            LinearProgressIndicator(
+              value: _progressValue,
+              color: Colors.deepOrangeAccent,
+              backgroundColor: Colors.transparent,
+              minHeight: 4,
+            ),
             Container(
               width: 318,
               height: 91,
-              margin: const EdgeInsets.only(left: 5),
+              margin: const EdgeInsets.only(left: 5,top: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -257,6 +263,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     );
   }
 
+  void _changeProgressValue({required double? value}) {
+    setState(() {
+      _progressValue = value;
+    });
+  }
+
   Future<void> performResetPassword() async {
     if (checkData()) {
       await resetPassword();
@@ -294,10 +306,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
         _secondCodeTextController.text.isNotEmpty &&
         _thirdCodeTextController.text.isNotEmpty &&
         _fourthCodeTextController.text.isNotEmpty) {
-      _code = _firstCodeTextController.text +
-          _secondCodeTextController.text +
-          _thirdCodeTextController.text +
-          _fourthCodeTextController.text;
       return true;
     }
     // showSnackBar(context: context, message: 'Enter sent code !', error: true, time: 1);
@@ -363,6 +371,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
         _secondCodeTextController.text +
         _thirdCodeTextController.text +
         _fourthCodeTextController.text;
+
+    _changeProgressValue(value: null);
     bool status = await CustomerApiController().resetPassword(
       mobile: mobile,
       code: code,
@@ -370,6 +380,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
       passwordConfirmation: _passwordConfirmationTextController.text,
       context: context,
     );
+    _changeProgressValue(value: status ? 1 : 0);
+
     if (status) {
       Navigator.pushReplacementNamed(context, '/sign_in');
     }

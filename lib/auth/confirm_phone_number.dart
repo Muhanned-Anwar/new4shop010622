@@ -16,7 +16,6 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
   late TextEditingController _passwordTextController;
   late TextEditingController _passwordConfirmationTextController;
 
-  String? _code;
   late TextEditingController _firstCodeTextController;
   late TextEditingController _secondCodeTextController;
   late TextEditingController _thirdCodeTextController;
@@ -28,7 +27,6 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
   late FocusNode _fourthFocusNode;
 
    String _phoneNumber = '+1919 345 8756';
-   String _activeNumber = '';
   @override
   void initState() {
     super.initState();
@@ -46,7 +44,6 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
     _fourthFocusNode = FocusNode();
 
     _phoneNumber = CustomerInformationGetXController.to.getPhoneNumber();
-    _activeNumber = CustomerInformationGetXController.to.getActiveCode();
 
   }
 
@@ -66,6 +63,8 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
     _fourthFocusNode.dispose();
     super.dispose();
   }
+
+  double? _progressValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -92,10 +91,16 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
         child: ListView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
+            LinearProgressIndicator(
+              value: _progressValue,
+              color: Colors.deepOrangeAccent,
+              backgroundColor: Colors.transparent,
+              minHeight: 4,
+            ),
             Container(
               width: 318,
               height: 91,
-              margin: const EdgeInsets.only(left: 5),
+              margin: const EdgeInsets.only(left: 5,top: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -202,6 +207,12 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
     );
   }
 
+  void _changeProgressValue({required double? value}) {
+    setState(() {
+      _progressValue = value;
+    });
+  }
+
   Future<void> performActivate() async {
     if(checkData()){
       await confirmPhone();
@@ -222,10 +233,6 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
         _secondCodeTextController.text.isNotEmpty &&
         _thirdCodeTextController.text.isNotEmpty &&
         _fourthCodeTextController.text.isNotEmpty) {
-      _code = _firstCodeTextController.text +
-          _secondCodeTextController.text +
-          _thirdCodeTextController.text +
-          _fourthCodeTextController.text;
       return true;
     }
     showSnackBar(
@@ -234,13 +241,14 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber> with Helpers {
   }
 
   Future<void> confirmPhone() async{
+    _changeProgressValue(value: null);
     String mobile = _phoneNumber.startsWith('0')
         ? _phoneNumber
         .substring(1, _phoneNumber.length)
         : _phoneNumber;
-
     String code = _firstCodeTextController.text + _secondCodeTextController.text + _thirdCodeTextController.text + _fourthCodeTextController.text;
     bool status = await CustomerApiController().activate(mobile: mobile, code: code, context: context);
+    _changeProgressValue(value: status ? 1 : 0);
     if(status){
       Navigator.pushReplacementNamed(context, '/sign_in');
     }

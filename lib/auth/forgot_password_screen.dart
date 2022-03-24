@@ -26,6 +26,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Helper
     _mobileTextEditingController.dispose();
     super.dispose();
   }
+
+  double? _progressValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +55,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Helper
         color: Colors.white,
         child: ListView(
           children: [
+            LinearProgressIndicator(
+              value: _progressValue,
+              color: Colors.deepOrangeAccent,
+              backgroundColor: Colors.transparent,
+              minHeight: 4,
+            ),
             Container(
               color: Colors.white,
               margin: const EdgeInsets.symmetric(horizontal: 51),
@@ -108,6 +117,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Helper
     );
   }
 
+  void _changeProgressValue({required double? value}) {
+    setState(() {
+      _progressValue = value;
+    });
+  }
 
   Future<void> performForgetPassword() async {
     if (checkData()) {
@@ -166,10 +180,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Helper
         1, _mobileTextEditingController.text.length)
         : _mobileTextEditingController.text;
 
+    _changeProgressValue(value: null);
     bool status = await CustomerApiController().forgetPassword(
       mobile: mobile,
       context: context,
     );
+    _changeProgressValue(value: status ? 1 : 0);
     if (status) {
       CustomerInformationGetXController.to.setPhoneNumber(_mobileTextEditingController.text);
       Navigator.pushNamed(context, '/reset_password_screen');

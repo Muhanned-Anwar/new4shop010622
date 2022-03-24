@@ -10,6 +10,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> with Helpers{
+
+  double? _progressValue = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,10 +61,16 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers{
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 80),
+              LinearProgressIndicator(
+                value: _progressValue,
+                backgroundColor: Colors.transparent,
+                color: Colors.grey.shade200,
+              ),
               Container(
                 width: double.infinity,
                 alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 100, bottom: 31),
+                margin: const EdgeInsets.only(top: 20, bottom: 31),
                 child: Image.asset(
                   'images/app/drawer/profile.png',
                   height: 114,
@@ -192,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers{
                         ),
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       height: 52,
                     ),
                   ],
@@ -206,12 +214,21 @@ class _ProfileScreenState extends State<ProfileScreen> with Helpers{
   }
 
   Future<void> logout()async{
+    _changeProgressValue(value: null);
     bool status = await CustomerApiController().logout();
+    _changeProgressValue(value: status ? 1 : 0);
     if(status){
       Navigator.pushNamedAndRemoveUntil(context, '/authentication_screen', (route) => false);
-      showSnackBar(context: context, message: 'logout Success Fully',time: 2);
+      showSnackBar(context: context, message: 'Logout Successfully',time: 2);
     }else{
-      showSnackBar(context: context, message: 'logout failed, try again',error: true);
+      showSnackBar(context: context, message: 'Logout Failed, try again',error: true);
     }
   }
+
+  void _changeProgressValue({required double? value}){
+    setState(() {
+      _progressValue = value;
+    });
+  }
+
 }

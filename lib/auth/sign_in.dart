@@ -18,8 +18,6 @@ class _SignInState extends State<SignIn> with Helpers {
   String? _mobileError;
   String? _passwordError;
 
-  late Future<bool> _futureStatus;
-  bool _status = false;
 
   @override
   void initState() {
@@ -63,7 +61,7 @@ class _SignInState extends State<SignIn> with Helpers {
             value: _progressValue,
             color: Colors.deepOrangeAccent,
             backgroundColor: Colors.transparent,
-            minHeight: 5,
+            minHeight: 4,
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 51),
@@ -92,6 +90,7 @@ class _SignInState extends State<SignIn> with Helpers {
                 TextField(
                   controller: _mobileTextController,
                   cursorColor: Colors.deepOrangeAccent,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Mobile',
                     labelStyle: const TextStyle(
@@ -364,11 +363,9 @@ class _SignInState extends State<SignIn> with Helpers {
     );
     _changeProgressValue(value: status ? 1 : 0);
     if (status) {
-      print('Success');
       Navigator.pushNamed(context, '/main_screen');
-      showSnackBar(context: context, message: 'Login SuccessFully', time: 2);
+      showSnackBar(context: context, message: 'Login successfully', time: 2);
     } else {
-      print('Failed');
       showSnackBar(
           context: context,
           message: 'Login Failed, try again',

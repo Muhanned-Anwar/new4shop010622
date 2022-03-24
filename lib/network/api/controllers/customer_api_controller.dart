@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:new4shop010622/prefs/customer_preference_controller.dart';
 import 'package:new4shop010622/utils/helpers.dart';
 
-import '../../../getX/customer_information_getX_controller.dart';
 
 class CustomerApiController with Helpers {
   Future<bool> login({
@@ -19,6 +18,8 @@ class CustomerApiController with Helpers {
     var response = await http.post(url, body: {
       'mobile': mobile,
       'password': password,
+    },headers: {
+      'lang':'en'
     });
 
     if (response.statusCode == 200) {
@@ -35,7 +36,8 @@ class CustomerApiController with Helpers {
     var url = Uri.parse(ApiSettings.logout);
     var response = await http.get(url, headers: {
       HttpHeaders.authorizationHeader: CustomerPreferenceController().token,
-      HttpHeaders.acceptHeader: 'application/json'
+      HttpHeaders.acceptHeader: 'application/json',
+      'lang':'en'
     });
 
     if (response.statusCode == 200 || response.statusCode == 401) {
@@ -98,6 +100,8 @@ class CustomerApiController with Helpers {
     var response = await http.post(url, body: {
       'mobile': mobile,
       'code': code,
+    },headers: {
+      'lang':'en'
     });
     if (response.statusCode == 200) {
       showSnackBar(
@@ -118,7 +122,9 @@ class CustomerApiController with Helpers {
     required BuildContext context,
   }) async {
     var url = Uri.parse(ApiSettings.forgetPassword);
-    var response = await http.post(url, body: {'mobile': mobile});
+    var response = await http.post(url, body: {'mobile': mobile},headers: {
+      'lang':'en'
+    });
     if (response.statusCode == 200) {
       showSnackBar(
           context: context, message: jsonDecode(response.body)['message']);
@@ -150,6 +156,8 @@ class CustomerApiController with Helpers {
       'code': code,
       'password': password,
       'password_confirmation': passwordConfirmation,
+    },headers: {
+      'lang':'en'
     });
     if (response.statusCode == 200) {
       showSnackBar(

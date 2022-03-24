@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:new4shop010622/getX/customer_information_getX_controller.dart';
-import 'package:new4shop010622/models/prefix_number.dart';
 import 'package:new4shop010622/network/api/controllers/city_api_controller.dart';
 import 'package:new4shop010622/network/api/controllers/customer_api_controller.dart';
 import 'package:new4shop010622/utils/helpers.dart';
@@ -23,10 +21,6 @@ class _SignUpState extends State<SignUp> with Helpers {
   int? _selectedCity;
 
 
-  final List<PreFixNumber> _preFixes = [
-    PreFixNumber(1, Image.asset('images/auth/US.png'), '+1'),
-    PreFixNumber(2, Image.asset('images/auth/US.png'), '+2'),
-  ];
 
   late TextEditingController _usernameTextController;
 
@@ -71,6 +65,8 @@ class _SignUpState extends State<SignUp> with Helpers {
     super.dispose();
   }
 
+  double? _progressValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,8 +89,15 @@ class _SignUpState extends State<SignUp> with Helpers {
       ),
       body: ListView(
         children: [
+          const SizedBox(height: 20),
+          LinearProgressIndicator(
+            value: _progressValue,
+            color: Colors.deepOrangeAccent,
+            backgroundColor: Colors.transparent,
+            minHeight: 4,
+          ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+            margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -383,7 +386,7 @@ class _SignUpState extends State<SignUp> with Helpers {
                           icon: const Icon(Icons.keyboard_arrow_down),
                           isExpanded: true,
                           value: _selectedCity,
-                          items: []);
+                          items: const []);
                     }
                   },
                 ),
@@ -422,6 +425,13 @@ class _SignUpState extends State<SignUp> with Helpers {
     );
   }
 
+  void _changeProgressValue({required double? value}) {
+    setState(() {
+      _progressValue = value;
+    });
+  }
+
+
   Future<void> performSignUp() async {
     if (checkData()) {
       await signUp();
@@ -444,7 +454,6 @@ class _SignUpState extends State<SignUp> with Helpers {
     bool password = checkPassword();
     bool confirmPassword = checkConfirmPassword();
     bool gender = checkGender();
-    bool city = checkCity();
 
     setState(() {
       _usernameError = !username ? 'Enter username !' : null;
@@ -574,6 +583,7 @@ class _SignUpState extends State<SignUp> with Helpers {
         ? _mobileTextController.text
             .substring(1, _mobileTextController.text.length)
         : _mobileTextController.text;
+    _changeProgressValue(value: null);
     bool status = await CustomerApiController().register(
       name: _usernameTextController.text,
       mobile: mobile,
@@ -583,7 +593,7 @@ class _SignUpState extends State<SignUp> with Helpers {
       cityId: _selectedCity.toString(),
       context: context,
     );
-
+    _changeProgressValue(value: status ? 1 : 0);
     if (status) {
       CustomerInformationGetXController.to.setPhoneNumber(_mobileTextController.text);
       Navigator.pushReplacementNamed(context, '/confirm_phone_number');
